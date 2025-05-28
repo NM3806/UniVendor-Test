@@ -54,11 +54,14 @@ const ProductDetails = ({ id }: ProductDetailsProps) => {
   const [activeTab, setActiveTab] = useState("general");
   const { toast } = useToast();
   const { user } = useAuth(); // Get current logged in user
+  // const user = { name: "Guest Tester" }; // bypassing auth for now
 
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [hoveredColor, setHoveredColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
+  //product fetch
   const {
     data: product,
     isLoading,
@@ -68,6 +71,14 @@ const ProductDetails = ({ id }: ProductDetailsProps) => {
     queryFn: () => fetch(`/api/products/${id}`).then((res) => res.json()),
     refetchOnWindowFocus: false,
   });
+
+  if (product && product.colors && !product.colors[0].imageUrl) {
+    product.colors = product.colors.map((color, index) => ({
+      ...color,
+      imageUrl: `https://dummyimage.com/600x400/${color.hex.replace('#', '')}/ffffff?text=${color.name}`,
+    }));
+  }
+
 
   useEffect(() => {
     if (product?.colors?.length && !selectedColor) {
@@ -196,7 +207,7 @@ const ProductDetails = ({ id }: ProductDetailsProps) => {
     user: any;
   }) => {
     const sizes = ["S", "M", "L", "XL", "XXL"]; // Example sizes, typically from product data
-    
+
     return (
       <div className="space-y-4">
         <div className="flex gap-4">
@@ -211,23 +222,29 @@ const ProductDetails = ({ id }: ProductDetailsProps) => {
               }}
               className="w-8 h-8 rounded-full"
               onClick={() => onColorChange(color.hex)}
-              onMouseEnter={() => setHoveredColor(color.hex)}
-              onMouseLeave={() => setHoveredColor(null)}
+              onMouseEnter={() => {
+                setHoveredColor(color.hex);
+                setPreviewImage(color.imageUrl || product.defaultImage);
+              }}
+              onMouseLeave={() => {
+                setHoveredColor(null);
+                setPreviewImage(null);
+              }}
+
             />
           ))}
         </div>
-        
+
         <div className="space-y-2">
           <label className="text-sm font-medium">Size:</label>
           <div className="flex gap-2">
             {sizes.map((size) => (
               <button
                 key={size}
-                className={`px-3 py-1 border rounded-md ${
-                  selectedSize === size 
-                    ? "border-black bg-black text-white" 
-                    : "border-gray-300 hover:border-gray-500"
-                }`}
+                className={`px-3 py-1 border rounded-md ${selectedSize === size
+                  ? "border-black bg-black text-white"
+                  : "border-gray-300 hover:border-gray-500"
+                  }`}
                 onClick={() => setSelectedSize(size)}
               >
                 {size}
@@ -238,10 +255,11 @@ const ProductDetails = ({ id }: ProductDetailsProps) => {
 
         <div>
           <img
-            src={getCurrentDisplayImage()}
-            alt={`Product in selected color`}
+            src={previewImage || getImageForColor(selectedColor)}
+            alt="Product Preview"
             className="w-64 h-64 object-contain border"
           />
+
         </div>
 
         <div className="flex gap-4">
