@@ -181,6 +181,15 @@ const ProductDetails = ({ id }: ProductDetailsProps) => {
 
   // Buy Now handler
   const handleBuyNow = () => {
+    if (!selectedColor || !selectedSize) {
+      toast({
+        title: "Selection Required",
+        description: "Please select both color and size to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!user) {
       toast({
         title: "Not Signed In",
