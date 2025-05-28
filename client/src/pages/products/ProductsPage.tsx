@@ -21,22 +21,31 @@ const ProductsPage = () => {
   const isLoading = false;
   const [hoveredProductColorMap, setHoveredProductColorMap] = useState<Record<number, string | undefined>>({});
 
-  // Define product type
-  type Product = {
-    id: number;
-    name: string;
-    description?: string;
-    price: string | number;
-    imageUrl?: string;
-    inStock: boolean;
-    categoryId?: number;
+  const getImageForColor = (product: Product, colorHex?: string) => {
+    const colorObj = product.colors?.find((c) => c.hex === colorHex);
+    return colorObj?.imageUrl || product.imageUrl;
   };
 
-  // Fetch vendor's products
-  // const { data: products, isLoading } = useQuery<Product[]>({
-  //   queryKey: vendorId ? [`/api/vendors/${vendorId}/products`] : ['/api/products'],
-  //   enabled: !!user,
-  // });
+  // Define product type
+  type Product = {
+  id: number;
+  name: string;
+  description?: string;
+  price: string | number;
+  imageUrl?: string;
+  image?: string;
+  defaultImage?: string;
+  inStock: boolean;
+  categoryId?: number;
+  vendorId?: number;
+  colors?: {
+    id: number;
+    name: string;
+    hex: string;
+    imageUrl: string;
+  }[];
+  sizes?: string[];
+};
 
   // Filter products based on search query
   const filteredProducts = products?.filter(product =>
@@ -114,28 +123,34 @@ const ProductsPage = () => {
               onClick={() => navigate(`/products/${product.id}`)}
             >
               {product.imageUrl ? (
-                <div className="relative flex justify-center">
-                  {/* <img
-                    src={product.imageUrl}
+                <div
+                  className="relative w-full aspect-square group"
+                  onMouseEnter={() => {
+                    if (product.colors?.[1]?.hex) {
+                      setHoveredProductColorMap((prev) => ({
+                        ...prev,
+                        [product.id]: product.colors[1].hex,
+                      }));
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredProductColorMap((prev) => ({
+                      ...prev,
+                      [product.id]: undefined,
+                    }));
+                  }}
+                >
+                  <img
+                    src={getImageForColor(product, hoveredProductColorMap[product.id])}
                     alt={product.name}
-                    className="w-full aspect-video object-cover group-hover:opacity-90 transition-opacity"
-                  /> */}
-                  <div
-                    className="w-64 h-64 border rounded-md"
-                    style={{
-                      backgroundColor: hoveredProductColorMap[product.id] || product.colors?.[0]?.hex || "#e5e7eb",
-                    }}
-                    onMouseEnter={() => {
-                      if (product.colors?.[0]?.hex) {
-                        setHoveredProductColorMap((prev) => ({ ...prev, [product.id]: product.colors[1]?.hex || product.colors[0].hex }));
-                      }
-                    }}
-                    onMouseLeave={() => {
-                      setHoveredProductColorMap((prev) => ({ ...prev, [product.id]: undefined }));
+                    className="w-full h-full object-cover rounded-md transition-opacity duration-300 group-hover:opacity-90"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = "none";
                     }}
                   />
 
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <Button size="sm" variant="secondary" className="shadow-md">
                       Edit Product
                     </Button>
@@ -143,13 +158,15 @@ const ProductsPage = () => {
                 </div>
               ) : (
                 <div
-                  className="w-full aspect-video flex items-center justify-center relative"
+                  className="w-full aspect-square flex items-center justify-center rounded-md border relative"
                   style={{
-                    backgroundColor: product.colors?.[0]?.hex || '#e5e7eb' // fallback gray
+                    backgroundColor:
+                      hoveredProductColorMap[product.id] || product.colors?.[0]?.hex || "#e5e7eb",
                   }}
                 >
                   <span className="text-white font-semibold">{product.name}</span>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <Button size="sm" variant="secondary" className="shadow-md">
                       Edit Product
                     </Button>
@@ -165,7 +182,7 @@ const ProductsPage = () => {
                   ) : (
                     <span className="text-red-600 font-medium">Out of Stock</span>
                   )}
-                  {' • '}₹{typeof product.price === 'string' ? parseFloat(product.price).toFixed(2) : product.price.toFixed(2)}
+                  {' • '}${typeof product.price === 'string' ? parseFloat(product.price).toFixed(2) : product.price.toFixed(2)}
                 </CardDescription>
               </CardHeader>
               <CardContent>

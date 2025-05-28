@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
@@ -43,36 +43,57 @@ interface ProductDetailsProps {
 interface Product {
   id: number;
   name: string;
-  colors: { id: number; name: string; hex: string; imageUrl?: string }[];
+  description: string;
+  price: string;
+  categoryId: number;
+  inStock: boolean;
+  image: string;
+
   defaultImage: string;
-  price?: string;
-  vendorId?: number;
-  // Add other product fields as needed
+  vendorId: number;
+  sizes: string[];
+  colors: {
+    id: number;
+    name: string;
+    hex: string;
+    imageUrl?: string;
+  }[];
 }
+
 
 const ProductDetails = ({ id }: ProductDetailsProps) => {
   const [, setLocation] = useLocation();
-  const [activeTab, setActiveTab] = useState("general");
+  const [activeTab, setActiveTab] = useState("variants");
   const { toast } = useToast();
-  const { user } = useAuth(); // Get current logged in user
-  // const user = { name: "Guest Tester" }; // bypassing auth for now
+  const { user } = useAuth();
+
 
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
-  const [hoveredColor, setHoveredColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [hoveredColor, setHoveredColor] = useState<string | null>(null);
 
   //product fetch
   const product = mockProducts.find(p => p.id === parseInt(id));
+  // const [selectedColor, setSelectedColor] = useState(product?.colors[0].hex ?? null);
+  // const [selectedSize, setSelectedSize] = useState(product?.sizes[0]);
+
   const isLoading = false;
   const error = !product;
 
 
-  if (product && product.colors && !product.colors[0].imageUrl) {
-    product.colors = product.colors.map((color, index) => ({
+  // if (product && product.colors && !product.colors[0].imageUrl) {
+  //   product.colors = product.colors.map((color, index) => ({
+  //     ...color,
+  //     imageUrl: `https://dummyimage.com/600x400/${color.hex.replace('#', '')}/ffffff?text=${color.name}`,
+  //   }));
+  // }
+  const updatedColors = useMemo(() => {
+    if (!product) return [];
+    return product.colors.map((color) => ({
       ...color,
-      imageUrl: `https://dummyimage.com/600x400/${color.hex.replace('#', '')}/ffffff?text=${color.name}`,
+      imageUrl: color.imageUrl || `https://dummyimage.com/600x400/${color.hex.replace('#', '')}/ffffff?text=${color.name}`,
     }));
-  }
+  }, [product]);
 
 
   useEffect(() => {
@@ -212,6 +233,7 @@ const ProductDetails = ({ id }: ProductDetailsProps) => {
   }) => {
     const sizes = ["S", "M", "L", "XL", "XXL"]; // Example sizes, typically from product data
 
+
     return (
       <div className="space-y-4">
         <div className="flex gap-4">
@@ -225,12 +247,13 @@ const ProductDetails = ({ id }: ProductDetailsProps) => {
                   selectedColor === color.hex ? "3px solid #000" : "1px solid #ccc",
               }}
               className="w-8 h-8 rounded-full"
-              onClick={() => setSelectedColor(color.hex)}
+              onClick={() => onColorChange(color.hex)}
               onMouseEnter={() => setHoveredColor(color.hex)}
               onMouseLeave={() => setHoveredColor(null)}
             />
           ))}
         </div>
+
 
         <div className="space-y-2">
           <label className="text-sm font-medium">Size:</label>
@@ -250,12 +273,13 @@ const ProductDetails = ({ id }: ProductDetailsProps) => {
           </div>
         </div>
 
-        <div
-          className="w-64 h-64 border rounded-md"
-          style={{
-            backgroundColor: hoveredColor || selectedColor || "#e5e7eb",
-          }}
-        />
+        <div className="w-64 h-64 bg-white border rounded-md overflow-hidden flex items-center justify-center">
+          <img
+            src={getCurrentDisplayImage()}
+            alt={product.name}
+            className="object-contain w-full h-full"
+          />
+        </div>
 
 
         <div className="flex gap-4">

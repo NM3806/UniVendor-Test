@@ -7,7 +7,6 @@ import { Loader2, Trash2, Plus, Minus, ShoppingCart } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useCartContext } from "@/contexts/CartContext";
@@ -18,6 +17,8 @@ interface CartItem {
   name: string;
   price: string;
   quantity: number;
+  color?: string;
+  size?: string;
   imageUrl?: string;
 }
 
@@ -30,8 +31,8 @@ interface Cart {
 }
 
 // Helper function to format currency
-const formatCurrency = (amount: string | number, currency = "INR") => {
-  return new Intl.NumberFormat("en-IN", {
+const formatCurrency = (amount: string | number, currency = "USD") => {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
   }).format(typeof amount === "string" ? parseFloat(amount) : amount);
@@ -188,20 +189,19 @@ const CartPage = () => {
             <CardHeader>
               <CardTitle>Cart Items ({cart.items.length})</CardTitle>
             </CardHeader>
+
             <CardContent className="p-0">
               <div className="divide-y">
                 {cart.items.map((item) => (
                   <div key={item.id} className="flex p-4 gap-4">
-                    <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0">
-                      <div
-                        className="w-full h-full rounded border"
-                        style={{
-                          backgroundColor: item.colorHex || '#e5e7eb',
-                        }}
-                        title={item.variant}
+                    {/* Image preview instead of color block */}
+                    <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0 border">
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
                       />
                     </div>
-
 
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-col h-full justify-between">
@@ -210,9 +210,18 @@ const CartPage = () => {
                           <p className="text-sm text-muted-foreground mt-1">
                             {formatCurrency(item.price)} each
                           </p>
+                          <p className="text-sm text-muted-foreground mt-0.5">
+                            Size: {item.size} &nbsp;|&nbsp; Color:{" "}
+                            <span
+                              className="inline-block w-3 h-3 rounded-full border ml-1 align-middle"
+                              style={{ backgroundColor: item.colorHex || "#e5e7eb" }}
+                              title={item.variant}
+                            />
+                          </p>
                         </div>
 
                         <div className="flex mt-2 items-center justify-between">
+                          {/* Quantity Controls */}
                           <div className="flex items-center border rounded-md">
                             <Button
                               type="button"
@@ -239,6 +248,7 @@ const CartPage = () => {
                             </Button>
                           </div>
 
+                          {/* Price & Delete */}
                           <div className="flex items-center gap-4">
                             <p className="font-medium">
                               {formatCurrency(parseFloat(item.price) * item.quantity)}
@@ -261,6 +271,7 @@ const CartPage = () => {
                 ))}
               </div>
             </CardContent>
+
             <CardFooter className="justify-between pt-6">
               <Button asChild variant="outline">
                 <Link to="/">Continue Shopping</Link>

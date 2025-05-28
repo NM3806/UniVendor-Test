@@ -46,6 +46,8 @@ import PrivateRoute from "@/components/PrivateRoute";
 import CartPage from "@/pages/checkout/CartPage";
 import { useLocation } from "wouter";
 import { useCartContext } from "@/contexts/CartContext";
+import FeaturedCategoriesCard from './components/FeaturedCategoriesCard'
+import FeaturedProductsCard from './components/FeaturedProductsCard'
 
 interface NewsletterProps {
   newsletterEmail: string;
@@ -87,6 +89,50 @@ function Router({
   const [_, setLocation] = useLocation();
   const { getCartSummary } = useCartContext();
   const { itemCount } = getCartSummary();
+
+  const categories = [
+    { image: '/images/headphones-black.jpg', label: 'Electronics' },
+    { image: '/images/shirt-blue.jpg', label: 'Fashion' },
+    { image: '/images/lightbulb-white.jpg', label: 'Home' },
+    { image: '/images/faceserum-clear.jpg', label: 'Beauty' },
+  ];
+
+  const products = [
+    {
+      id: 1,
+      image: '/images/headphones-black.jpg',
+      category: 'Electronics',
+      name: 'Wireless Bluetooth Headphones',
+      price: 89.99,
+      oldPrice: 129.99,
+      rating: 4.5,
+      isOnSale: true,
+    },
+    {
+      id: 2,
+      image: '/images/shirt-blue.jpg',
+      category: 'Fashion',
+      name: "Men's Casual Shirt",
+      price: 39.99,
+      rating: 4.2,
+    },
+    {
+      id: 3,
+      image: '/images/lightbulb-white.jpg',
+      category: 'Home',
+      name: "Smart LED Light Bulb",
+      price: 24.99,
+      rating: 3.8,
+    },
+    {
+      id: 4,
+      image: '/images/faceserum-clear.jpg',
+      category: 'Beauty',
+      name: "Organic Face Serum",
+      price: 32.99,
+      rating: 4.6,
+    },
+  ];
 
   // Otherwise show the platform's routes
   return (
@@ -253,47 +299,14 @@ function Router({
           <section className="py-12">
             <div className="container mx-auto px-4">
               <h2 className="text-2xl font-bold mb-8 text-gray-900">Shop by Category</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <a href="#" className="group">
-                  <div className="rounded-lg overflow-hidden bg-gray-100 aspect-square relative">
-                    <div className="absolute inset-0 bg-indigo-600/10 group-hover:bg-indigo-600/20 transition-colors"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <span className="bg-white/90 text-gray-900 px-4 py-2 rounded-full text-sm font-medium">Electronics</span>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-                <a href="#" className="group">
-                  <div className="rounded-lg overflow-hidden bg-gray-100 aspect-square relative">
-                    <div className="absolute inset-0 bg-indigo-600/10 group-hover:bg-indigo-600/20 transition-colors"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <span className="bg-white/90 text-gray-900 px-4 py-2 rounded-full text-sm font-medium">Fashion</span>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-                <a href="#" className="group">
-                  <div className="rounded-lg overflow-hidden bg-gray-100 aspect-square relative">
-                    <div className="absolute inset-0 bg-indigo-600/10 group-hover:bg-indigo-600/20 transition-colors"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <span className="bg-white/90 text-gray-900 px-4 py-2 rounded-full text-sm font-medium">Home</span>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-                <a href="#" className="group">
-                  <div className="rounded-lg overflow-hidden bg-gray-100 aspect-square relative">
-                    <div className="absolute inset-0 bg-indigo-600/10 group-hover:bg-indigo-600/20 transition-colors"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <span className="bg-white/90 text-gray-900 px-4 py-2 rounded-full text-sm font-medium">Beauty</span>
-                      </div>
-                    </div>
-                  </div>
-                </a>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {categories.map((category, index) => (
+                  <FeaturedCategoriesCard
+                    key={index}
+                    image={category.image}
+                    label={category.label}
+                  />
+                ))}
               </div>
             </div>
           </section>
@@ -305,132 +318,22 @@ function Router({
                 <h2 className="text-2xl font-bold text-gray-900">Featured Products</h2>
                 <a href="/products" className="text-indigo-600 font-medium hover:underline">View All</a>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {/* Product 1 */}
-                <Link href={`/products/1`} className="block">
-                  <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div className="relative">
-                      <div className="aspect-square bg-gray-200"></div>
-                      <div className="absolute top-2 left-2">
-                        <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">SALE</span>
-                      </div>
-                      <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full text-gray-700 hover:text-red-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                      </button>
-                    </div>
-                    <div className="p-4">
-                      <h3 className="text-sm text-gray-500 mb-1">Electronics</h3>
-                      <h4 className="font-medium text-gray-900 mb-2 truncate">Wireless Bluetooth Headphones</h4>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="text-lg font-bold text-gray-900">$89.99</span>
-                          <span className="text-sm text-gray-500 line-through ml-2">$129.99</span>
-                        </div>
-                        <div className="flex items-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                          <span className="text-sm text-gray-700 ml-1">4.5</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-
-                {/* Product 2 */}
-                <Link href={`/products/2`} className="block">
-                  <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div className="relative">
-                      <div className="aspect-square bg-gray-200"></div>
-                      <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full text-gray-700 hover:text-red-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                      </button>
-                    </div>
-                    <div className="p-4">
-                      <h3 className="text-sm text-gray-500 mb-1">Fashion</h3>
-                      <h4 className="font-medium text-gray-900 mb-2 truncate">Men's Casual Shirt</h4>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="text-lg font-bold text-gray-900">$39.99</span>
-                        </div>
-                        <div className="flex items-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                          <span className="text-sm text-gray-700 ml-1">4.2</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-
-                {/* Product 3 */}
-                <Link href={`/products/3`} className="block">
-
-                  <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div className="relative">
-                      <div className="aspect-square bg-gray-200"></div>
-                      <div className="absolute top-2 left-2">
-                        <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">NEW</span>
-                      </div>
-                      <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full text-gray-700 hover:text-red-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                      </button>
-                    </div>
-                    <div className="p-4">
-                      <h3 className="text-sm text-gray-500 mb-1">Home</h3>
-                      <h4 className="font-medium text-gray-900 mb-2 truncate">Smart LED Light Bulb</h4>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="text-lg font-bold text-gray-900">$24.99</span>
-                        </div>
-                        <div className="flex items-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                          <span className="text-sm text-gray-700 ml-1">4.8</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-
-                {/* Product 4 */}
-                <Link href={`/products/4`} className="block">
-
-                  <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div className="relative">
-                      <div className="aspect-square bg-gray-200"></div>
-                      <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full text-gray-700 hover:text-red-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                      </button>
-                    </div>
-                    <div className="p-4">
-                      <h3 className="text-sm text-gray-500 mb-1">Beauty</h3>
-                      <h4 className="font-medium text-gray-900 mb-2 truncate">Organic Face Serum</h4>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="text-lg font-bold text-gray-900">$32.99</span>
-                        </div>
-                        <div className="flex items-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                          <span className="text-sm text-gray-700 ml-1">4.7</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {products.map((product) => (
+                  <FeaturedProductsCard
+                    key={product.id}
+                    id={product.id}
+                    image={product.image}
+                    category={product.category}
+                    name={product.name}
+                    price={product.price}
+                    oldPrice={product.oldPrice}
+                    rating={product.rating}
+                    isOnSale={product.isOnSale}
+                  />
+                ))}
               </div>
+
             </div>
           </section>
 
@@ -648,7 +551,7 @@ function Router({
       </Route>
       <Route path="/products">
         {/* <PrivateRoute roles={["vendor"]}> */}
-          <ProductsPage />
+        <ProductsPage />
         {/* </PrivateRoute> */}
       </Route>
       <Route path="/product-categories">
