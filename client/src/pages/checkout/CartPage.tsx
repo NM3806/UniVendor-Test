@@ -10,6 +10,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CartComponent } from "@/components/checkout/CartComponent";
 
 interface CartItem {
   id: number;
@@ -324,6 +325,7 @@ const CartPage = () => {
       </div>
     </div>
   );
+  
 };
 
 export default CartPage;

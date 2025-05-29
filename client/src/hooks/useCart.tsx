@@ -27,14 +27,20 @@ export function useCart() {
   const { toast } = useToast();
 
   // Fetch cart
-  const { 
+  const {
     data: cart,
     isLoading,
     error,
-    refetch 
+    refetch
   } = useQuery<Cart>({
     queryKey: ['/api/cart'],
-    queryFn: getQueryFn({ on401: "returnNull" }),
+    // queryFn: getQueryFn({ on401: "returnNull" }),
+    queryFn: async ({ queryKey }) => {
+      const endpoint = queryKey[0];
+      const response = await fetch(endpoint);
+      return await response.json();
+    }
+
   });
 
   // Add to cart mutation

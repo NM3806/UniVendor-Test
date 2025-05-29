@@ -44,6 +44,7 @@ import TestCartPage from "./pages/test-cart";
 import SimpleTestPage from "./pages/simple-test";
 import IndependentCartPage from "./pages/independent-cart";
 import PrivateRoute from "@/components/PrivateRoute";
+import CartPage from "@/pages/checkout/CartPage";
 
 interface NewsletterProps {
   newsletterEmail: string;
@@ -98,7 +99,7 @@ function Router({
       <Route path="/independent-cart">
         <IndependentCartPage />
       </Route>
-      
+
       {/* Welcome Route */}
       <Route path="/">
         <div className="min-h-screen bg-white">
@@ -125,9 +126,9 @@ function Router({
 
                 {/* Search */}
                 <div className="hidden md:flex relative w-full max-w-md mx-4">
-                  <input 
-                    type="text" 
-                    placeholder="Search for products..." 
+                  <input
+                    type="text"
+                    placeholder="Search for products..."
                     className="w-full py-2 pl-10 pr-4 rounded-lg border border-gray-300 bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -147,7 +148,7 @@ function Router({
                       <span className="ml-2 text-sm font-medium hidden sm:inline">Test Stores</span>
                     </Link>
                   )}
-                  
+
                   {/* Account */}
                   <Link href="/login" className="flex items-center text-gray-700 hover:text-indigo-600">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -180,7 +181,7 @@ function Router({
                 <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium px-3 py-2 text-sm whitespace-nowrap mr-2">
                   Home
                 </Link>
-                
+
                 {/* Dynamic category navigation component */}
                 {!isVendorStore ? (
                   // Demo categories for platform homepage
@@ -453,9 +454,9 @@ function Router({
               <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white">Sign Up for Our Newsletter</h2>
               <p className="text-indigo-100 mb-6 max-w-2xl mx-auto">Get the latest updates on new products, sales, and special offers delivered right to your inbox.</p>
               <form className="max-w-md mx-auto flex flex-col sm:flex-row gap-3" onSubmit={handleNewsletterSubmit}>
-                <input 
-                  type="email" 
-                  placeholder="Your email address" 
+                <input
+                  type="email"
+                  placeholder="Your email address"
                   className="flex-grow px-4 py-3 rounded-lg focus:outline-none"
                   required
                   value={newsletterEmail}
@@ -509,7 +510,7 @@ function Router({
                     </a>
                   </div>
                 </div>
-                
+
                 <div>
                   <h3 className="text-lg font-semibold mb-4 text-gray-900">Shop</h3>
                   <ul className="space-y-2">
@@ -519,7 +520,7 @@ function Router({
                     <li><a href="#" className="text-gray-600 hover:text-indigo-600">All Collections</a></li>
                   </ul>
                 </div>
-                
+
                 <div>
                   <h3 className="text-lg font-semibold mb-4 text-gray-900">Customer Service</h3>
                   <ul className="space-y-2">
@@ -529,7 +530,7 @@ function Router({
                     <li><a href="#" className="text-gray-600 hover:text-indigo-600">Track Order</a></li>
                   </ul>
                 </div>
-                
+
                 <div>
                   <h3 className="text-lg font-semibold mb-4 text-gray-900">About</h3>
                   <ul className="space-y-2">
@@ -540,7 +541,7 @@ function Router({
                   </ul>
                 </div>
               </div>
-              
+
               <div className="pt-8 mt-8 border-t border-gray-200">
                 <div className="flex flex-col md:flex-row justify-between items-center">
                   <p className="text-gray-500 mb-4 md:mb-0">© {new Date().getFullYear()} ShopEase. All rights reserved.</p>
@@ -555,11 +556,11 @@ function Router({
           </footer>
         </div>
       </Route>
-      
+
       {/* Auth Routes */}
       <Route path="/login" component={LoginPage} />
       <Route path="/register" component={RegisterPage} />
-      
+
       {/* Super Admin Routes */}
       <Route path="/admin">
         <PrivateRoute roles={["super_admin"]}>
@@ -578,14 +579,14 @@ function Router({
           </PrivateRoute>
         )}
       </Route>
-      
+
       {/* Other Super Admin Routes */}
       <Route path="/domains">
         <PrivateRoute roles={["super_admin"]}>
           <DomainsPage />
         </PrivateRoute>
       </Route>
-      
+
       <Route path="/domains/:id">
         <PrivateRoute roles={["super_admin"]}>
           <DomainDetailPage />
@@ -601,7 +602,7 @@ function Router({
           <AnalyticsPage />
         </PrivateRoute>
       </Route>
-      
+
       <Route path="/users">
         <PrivateRoute roles={["super_admin"]}>
           <UsersManagementPage />
@@ -612,7 +613,7 @@ function Router({
           <SettingsPage />
         </PrivateRoute>
       </Route>
-      
+
       {/* Vendor Routes */}
       <Route path="/dashboard">
         <PrivateRoute roles={["vendor"]}>
@@ -661,7 +662,7 @@ function Router({
           <VendorAnalyticsPage />
         </PrivateRoute>
       </Route>
-      
+
       <Route path="/payment-settings">
         <PrivateRoute roles={["vendor"]}>
           <PaymentSettingsPage />
@@ -673,11 +674,15 @@ function Router({
           <MarketingPage />
         </PrivateRoute>
       </Route>
-      
+
       <Route path="/reports">
         <PrivateRoute roles={["vendor"]}>
           <ReportsPage />
         </PrivateRoute>
+      </Route>
+
+      <Route path="/cart">
+        <CartPage />
       </Route>
 
       {/* S3 Upload test removed */}
@@ -687,7 +692,7 @@ function Router({
           <SubscriptionPage />
         </PrivateRoute>
       </Route>
-      
+
       {/* Fallback to 404 */}
       {/* This will catch any undefined routes including /s3-upload-test */}
       <Route>

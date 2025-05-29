@@ -23,7 +23,7 @@ async function throwIfResNotOk(res: Response) {
 export const apiRequest = async (method: string, endpoint: string, body?: any) => {
   const baseUrl = getBaseUrl();
   const url = `${baseUrl}${endpoint}`;
-  
+
   const response = await fetch(url, {
     method,
     headers: {
@@ -44,16 +44,22 @@ export const apiRequest = async (method: string, endpoint: string, body?: any) =
 // Query function for React Query
 export const getQueryFn: QueryFunction = async ({ queryKey }) => {
   const baseUrl = getBaseUrl();
+
+  // if (!queryKey || !queryKey[0]) {
+  //   throw new Error("Invalid queryKey passed to getQueryFn");
+  // }
   const endpoint = queryKey[0] as string;
+
+
   const response = await fetch(`${baseUrl}${endpoint}`, {
     credentials: 'include',
   });
-  
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || 'Query failed');
   }
-  
+
   return response.json();
 };
 

@@ -9,24 +9,33 @@ export const setupMockAPI = () => {
   if (import.meta.env.DEV && !import.meta.env.VITE_USE_MOCK_API) return;
 
   console.log('Setting up mock API handlers for deployment environment');
-  
+
   // Create a mock handler for fetch requests
   const originalFetch = window.fetch;
-  
+
   window.fetch = async (input, init) => {
     const url = typeof input === 'string' ? input : (input as Request).url;
-    
+
+    if (url.includes('/api/auth/impersonation-status')) {
+      return new Response(JSON.stringify({
+        isImpersonating: false
+      }), {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200
+      });
+    }
+
     // If not an API call, proceed normally
     if (!url.includes('/api/')) {
       return originalFetch(input, init);
     }
-    
+
     console.log(`[Mock API] Request to: ${url}`);
-    
+
     // Mock different API endpoints
     if (url.includes('/api/products')) {
       const productId = url.match(/\/api\/products\/(\d+)/)?.[1];
-      
+
       // Handle specific product request
       if (productId) {
         return new Response(JSON.stringify({
@@ -46,7 +55,7 @@ export const setupMockAPI = () => {
           status: 200
         });
       }
-      
+
       // Handle products list
       return new Response(JSON.stringify([
         { id: 1, name: "T-Shirt", price: "19.99", image: "https://placehold.co/400x400/dddddd/333333?text=T-Shirt" },
@@ -57,7 +66,7 @@ export const setupMockAPI = () => {
         status: 200
       });
     }
-    
+
     // Handle user authentication endpoints
     if (url.includes('/api/auth')) {
       if (url.includes('/logout')) {
@@ -66,7 +75,7 @@ export const setupMockAPI = () => {
           status: 200
         });
       }
-      
+
       if (url.includes('/login') || url.includes('/register')) {
         return new Response(JSON.stringify({
           user: {
@@ -82,7 +91,7 @@ export const setupMockAPI = () => {
           status: 200
         });
       }
-      
+
       // Current user
       return new Response(JSON.stringify({
         id: 1,
@@ -95,7 +104,7 @@ export const setupMockAPI = () => {
         status: 200
       });
     }
-    
+
     // Handle cart endpoints with localStorage persistence
     if (url.includes('/api/cart')) {
       // Use localStorage to simulate server persistence
@@ -107,30 +116,30 @@ export const setupMockAPI = () => {
           total: "0.00"
         }));
       }
-      
+
       const serverCart = JSON.parse(localStorage.getItem('server_cart') || '{}');
-      
+
       // Handle different HTTP methods
       const method = init?.method || 'GET';
-      
+
       if (method === 'GET') {
         return new Response(JSON.stringify(serverCart), {
           headers: { 'Content-Type': 'application/json' },
           status: 200
         });
       }
-      
+
       if (method === 'POST') {
         try {
           const body = JSON.parse(init?.body?.toString() || '{}');
-          
+
           // Add item to cart
           if (!serverCart.items) serverCart.items = [];
-          
+
           const existingItemIndex = serverCart.items.findIndex(
             (item: any) => item.productId === body.productId && item.variant === body.variant
           );
-          
+
           if (existingItemIndex >= 0) {
             serverCart.items[existingItemIndex].quantity += body.quantity;
           } else {
@@ -139,18 +148,18 @@ export const setupMockAPI = () => {
               id: Date.now().toString() // Generate unique ID
             });
           }
-          
+
           // Calculate cart totals
-          const subtotal = serverCart.items.reduce((total: number, item: any) => 
+          const subtotal = serverCart.items.reduce((total: number, item: any) =>
             total + (parseFloat(item.price) * item.quantity), 0);
           const tax = subtotal * 0.08;
-          
+
           serverCart.subtotal = subtotal.toFixed(2);
           serverCart.tax = tax.toFixed(2);
           serverCart.total = (subtotal + tax).toFixed(2);
-          
+
           localStorage.setItem('server_cart', JSON.stringify(serverCart));
-          
+
           return new Response(JSON.stringify({ success: true, cart: serverCart }), {
             headers: { 'Content-Type': 'application/json' },
             status: 200
@@ -162,29 +171,29 @@ export const setupMockAPI = () => {
           });
         }
       }
-      
+
       if (method === 'PUT') {
         try {
           const body = JSON.parse(init?.body?.toString() || '{}');
           const itemId = url.split('/').pop();
-          
+
           // Update item quantity
           const itemIndex = serverCart.items.findIndex((item: any) => item.id === itemId);
           if (itemIndex >= 0) {
             serverCart.items[itemIndex].quantity = body.quantity;
           }
-          
+
           // Calculate cart totals
-          const subtotal = serverCart.items.reduce((total: number, item: any) => 
+          const subtotal = serverCart.items.reduce((total: number, item: any) =>
             total + (parseFloat(item.price) * item.quantity), 0);
           const tax = subtotal * 0.08;
-          
+
           serverCart.subtotal = subtotal.toFixed(2);
           serverCart.tax = tax.toFixed(2);
           serverCart.total = (subtotal + tax).toFixed(2);
-          
+
           localStorage.setItem('server_cart', JSON.stringify(serverCart));
-          
+
           return new Response(JSON.stringify({ success: true, cart: serverCart }), {
             headers: { 'Content-Type': 'application/json' },
             status: 200
@@ -196,11 +205,11 @@ export const setupMockAPI = () => {
           });
         }
       }
-      
+
       if (method === 'DELETE') {
         const segments = url.split('/');
         const lastSegment = segments[segments.length - 1];
-        
+
         // Clear entire cart
         if (lastSegment === 'cart') {
           localStorage.setItem('server_cart', JSON.stringify({
@@ -209,35 +218,35 @@ export const setupMockAPI = () => {
             tax: "0.00",
             total: "0.00"
           }));
-          
+
           return new Response(JSON.stringify({ success: true }), {
             headers: { 'Content-Type': 'application/json' },
             status: 200
           });
         }
-        
+
         // Remove specific item
         const itemId = lastSegment;
         serverCart.items = serverCart.items.filter((item: any) => item.id !== itemId);
-        
+
         // Calculate cart totals
         const subtotal = serverCart.items.reduce((total: number, item: any) =>
           total + (parseFloat(item.price) * item.quantity), 0);
         const tax = subtotal * 0.08;
-        
+
         serverCart.subtotal = subtotal.toFixed(2);
         serverCart.tax = tax.toFixed(2);
         serverCart.total = (subtotal + tax).toFixed(2);
-        
+
         localStorage.setItem('server_cart', JSON.stringify(serverCart));
-        
+
         return new Response(JSON.stringify({ success: true, cart: serverCart }), {
           headers: { 'Content-Type': 'application/json' },
           status: 200
         });
       }
     }
-    
+
     // Default response for unhandled API endpoints
     return new Response(JSON.stringify({ error: 'Not implemented in demo mode' }), {
       headers: { 'Content-Type': 'application/json' },
