@@ -113,10 +113,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<Error | null>(null);
   
   // Get authentication status - with defaults in case AuthContext fails
-  const auth = useAuth() || { user: null, isAuthenticated: false, isLoading: true };
+  const auth = useAuth() || { user: null, isAuthenticated: false, isLoading: false };
   const { user, isAuthenticated, isLoading: isAuthLoading } = auth;
   
   // Initialize cart hooks with error handling
+  
   let serverCart: ServerCartHook | undefined;
   let localCart: LocalCartHook | undefined;
   
