@@ -6,8 +6,13 @@ import { LocalCartItem } from "@/hooks/useLocalCart";
 export function localToServerCartItem(item: LocalCartItem) {
   return {
     productId: item.productId,
+    name: item.name,
+    price: item.price,
     quantity: item.quantity,
-    variant: item.variant,
+    imageUrl: item.imageUrl || null,
+    variant: item.variant || null,
+    colorHex: item.colorHex || null,
+    size: item.size || null,
     vendorId: item.vendorId
   };
 }

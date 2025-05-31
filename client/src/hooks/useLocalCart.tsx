@@ -59,9 +59,12 @@ export function useLocalCart() {
     const loadCart = () => {
       try {
         const savedCart = localStorage.getItem(LOCAL_CART_KEY);
+        console.log("Raw savedCart from localStorage:", savedCart); 
         if (savedCart) {
           const parsedCart = JSON.parse(savedCart) as LocalCart;
+          console.log("Parsed local cart:", parsedCart);
           setCart(parsedCart);
+          console.log("[useLocalCart] Loaded items:", parsedCart.items.length);
         }
       } catch (error) {
         console.error('Failed to load cart from localStorage:', error);
@@ -76,6 +79,7 @@ export function useLocalCart() {
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     if (!isLoading) {
+      console.log("Saving cart to localStorage:", cart);
       localStorage.setItem(LOCAL_CART_KEY, JSON.stringify(cart));
     }
   }, [cart, isLoading]);

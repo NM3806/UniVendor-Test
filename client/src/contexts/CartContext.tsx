@@ -111,30 +111,29 @@ const CartContext = createContext<CartContextType | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  
+
   // Get authentication status - with defaults in case AuthContext fails
   const auth = useAuth() || { user: null, isAuthenticated: false, isLoading: false };
   const { user, isAuthenticated, isLoading: isAuthLoading } = auth;
-  
+
   // Initialize cart hooks with error handling
-  
   let serverCart: ServerCartHook | undefined;
   let localCart: LocalCartHook | undefined;
-  
+
   try {
     serverCart = useCart() as ServerCartHook;
   } catch (err) {
     console.error("Error initializing server cart:", err);
     setError(err instanceof Error ? err : new Error("Failed to initialize server cart"));
   }
-  
+
   try {
     localCart = useLocalCart() as LocalCartHook;
   } catch (err) {
     console.error("Error initializing local cart:", err);
     setError(err instanceof Error ? err : new Error("Failed to initialize local cart"));
   }
-  
+
   const { toast } = useToast();
 
   // Merge local cart with server cart when user logs in
@@ -143,53 +142,65 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (!localCart || !serverCart) {
       return;
     }
-    
+
     // Only run if user just logged in and we have items in local cart
-    if (isAuthenticated && !isAuthLoading && localCart.cart && localCart.cart.items && localCart.cart.items.length > 0) {
-      const mergeLocalCartWithServer = async () => {
-        try {
-          // For each item in the local cart
-          for (const item of localCart.cart.items) {
-            // Convert local cart item to server format
-            await serverCart.addToCart(localToServerCartItem(item));
-          }
-          
-          // Clear the local cart after successful merge
-          localCart.clearCart();
-          
-          // Notify user
-          toast({
-            title: "Cart Updated",
-            description: "Your cart items have been saved to your account",
-          });
-        } catch (error) {
-          console.error('Error merging carts:', error);
-          toast({
-            title: "Error",
-            description: "Failed to merge your cart items with your account",
-            variant: "destructive",
-          });
+    const mergeLocalCartWithServer = async () => {
+      try {
+        for (const item of localCart.cart.items) {
+          await serverCart.addToCart(localToServerCartItem(item));
         }
-      };
-      
+        localCart.clearCart();
+        toast({
+          title: "Cart Updated",
+          description: "Your cart items have been saved to your account",
+        });
+      } catch (error) {
+        console.error('Error merging carts:', error);
+        toast({
+          title: "Error",
+          description: "Failed to merge your cart items with your account",
+          variant: "destructive",
+        });
+      } finally {
+        setIsReady(true); // ✅ Always runs
+      }
+    };
+
+    if (isAuthenticated && !isAuthLoading && localCart.cart.items.length > 0) {
       mergeLocalCartWithServer();
+    } else {
+      setIsReady(true);
     }
-    
-    setIsReady(true);
+
   }, [isAuthenticated, isAuthLoading, localCart, serverCart, toast]);
 
   // Default empty cart matching our unified type
-  const defaultCart: UnifiedCart = { 
-    items: [], 
-    subtotal: "0.00", 
-    tax: "0.00", 
-    total: "0.00" 
+  const defaultCart: UnifiedCart = {
+    items: [],
+    subtotal: "0.00",
+    tax: "0.00",
+    total: "0.00"
   };
-  
-  // Determine which cart to use based on authentication status
-  const cart: UnifiedCart = isAuthenticated && serverCart ? (serverCart.cart as UnifiedCart || defaultCart) : (localCart ? localCart.cart : defaultCart);
-  const isLoading = !isReady || (isAuthenticated ? (serverCart ? serverCart.isLoading : true) : (localCart ? localCart.isLoading : true));
-  
+
+  // // Determine which cart to use based on authentication status
+  // const cart: UnifiedCart = isAuthenticated && serverCart ? (serverCart.cart as UnifiedCart || defaultCart) : (localCart ? localCart.cart : defaultCart);
+  // const isLoading = !isReady || (isAuthenticated ? (serverCart ? serverCart.isLoading : true) : (localCart ? localCart.isLoading : true));
+
+  // Local cart will be visible before login | Cart is only considered "empty" once everything is initialized
+  let cart: UnifiedCart = defaultCart;
+  let isLoading = true;
+
+  if (isReady) {
+    if (isAuthenticated && serverCart) {
+      cart = serverCart.cart as UnifiedCart || defaultCart;
+      isLoading = serverCart.isLoading;
+    } else if (localCart) {
+      cart = localCart.cart || defaultCart;
+      console.log("[useLocalCart] Final cart state", cart);
+      isLoading = localCart.isLoading;
+    }
+  }
+
   // Add to cart (handles authenticated and guest users)
   const addToCart = (item: any) => {
     try {
@@ -209,9 +220,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
           size: item.size || null,
           vendorId: item.vendorId
         };
-        
+
         localCart.addToCart(localItem);
-        
+
         toast({
           title: "Added to cart",
           description: "Item has been added to your cart",
@@ -233,7 +244,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       });
     }
   };
-  
+
   // Update quantity
   const updateQuantity = (itemId: any, quantity: number) => {
     try {
@@ -248,7 +259,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       console.error("Error updating quantity:", err);
     }
   };
-  
+
   // Remove item
   const removeItem = (itemId: any) => {
     try {
@@ -272,7 +283,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       });
     }
   };
-  
+
   // Clear cart
   const clearCart = () => {
     try {
@@ -296,7 +307,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       });
     }
   };
-  
+
   // Get cart summary
   const getCartSummary = () => {
     try {
@@ -308,7 +319,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       console.error("Error getting cart summary:", err);
     }
-    
+
     // Default summary if error or not available
     return {
       subtotal: "0.00",
@@ -317,7 +328,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       itemCount: 0,
     };
   };
-  
+
   // Refetch cart
   const refetchCart = () => {
     try {
@@ -335,7 +346,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const isUpdatingQuantity = isAuthenticated && serverCart ? serverCart.isUpdatingQuantity : false;
   const isRemovingItem = isAuthenticated && serverCart ? serverCart.isRemovingItem : false;
   const isClearingCart = isAuthenticated && serverCart ? serverCart.isClearingCart : false;
-  
+
   return (
     <CartContext.Provider
       value={{
@@ -356,6 +367,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     >
       {children}
     </CartContext.Provider>
+    
   );
 }
 

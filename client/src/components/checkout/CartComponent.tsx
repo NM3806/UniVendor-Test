@@ -15,12 +15,12 @@ type CartProps = {
 };
 
 export function CartComponent({ vendorId, onCheckout }: CartProps) {
-  const { 
-    cart, 
-    isLoading, 
-    updateQuantity, 
-    removeItem, 
-    clearCart, 
+  const {
+    cart,
+    isLoading,
+    updateQuantity,
+    removeItem,
+    clearCart,
     getCartSummary,
     isUpdatingQuantity
   } = useCartContext();
@@ -50,11 +50,23 @@ export function CartComponent({ vendorId, onCheckout }: CartProps) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-48">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ShoppingCart className="w-5 h-5" />
+            Loading Cart
+          </CardTitle>
+          <CardDescription>Please wait while we load your cart</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-primary" />
+          </div>
+        </CardContent>
+      </Card>
     );
   }
+  console.log("[CartComponent] Item check", cart.items?.length);
 
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
@@ -97,9 +109,9 @@ export function CartComponent({ vendorId, onCheckout }: CartProps) {
             <div key={item.id} className="flex items-center gap-4">
               <div className="flex-shrink-0 h-16 w-16 rounded-md overflow-hidden bg-muted">
                 {item.imageUrl ? (
-                  <img 
-                    src={item.imageUrl} 
-                    alt={item.name} 
+                  <img
+                    src={item.imageUrl}
+                    alt={item.name}
                     className="h-full w-full object-cover"
                   />
                 ) : (
@@ -120,9 +132,9 @@ export function CartComponent({ vendorId, onCheckout }: CartProps) {
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  size="icon" 
+                <Button
+                  variant="outline"
+                  size="icon"
                   className="h-8 w-8"
                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
                   disabled={isUpdatingQuantity}
@@ -130,18 +142,18 @@ export function CartComponent({ vendorId, onCheckout }: CartProps) {
                   <MinusCircle className="h-4 w-4" />
                 </Button>
                 <span className="w-8 text-center">{item.quantity}</span>
-                <Button 
-                  variant="outline" 
-                  size="icon" 
+                <Button
+                  variant="outline"
+                  size="icon"
                   className="h-8 w-8"
                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
                   disabled={isUpdatingQuantity}
                 >
                   <PlusCircle className="h-4 w-4" />
                 </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
+                <Button
+                  variant="ghost"
+                  size="icon"
                   className="h-8 w-8 text-destructive"
                   onClick={() => removeItem(item.id)}
                   disabled={isUpdatingQuantity}
@@ -152,9 +164,9 @@ export function CartComponent({ vendorId, onCheckout }: CartProps) {
             </div>
           ))}
         </div>
-        
+
         <Separator className="my-4" />
-        
+
         <div className="space-y-2">
           <div className="flex justify-between">
             <span className="text-muted-foreground">Subtotal</span>
@@ -172,21 +184,21 @@ export function CartComponent({ vendorId, onCheckout }: CartProps) {
       </CardContent>
       <CardFooter className="flex flex-col gap-2">
         <div className="flex gap-2 w-full">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="flex-1"
             onClick={() => clearCart()}
           >
             Clear Cart
           </Button>
-          <Button 
+          <Button
             className="flex-1"
             onClick={handleCheckout}
           >
             Checkout
           </Button>
         </div>
-        <Button 
+        <Button
           variant="ghost"
           className="w-full"
           onClick={() => setLocation(`/store/${vendorId}`)}

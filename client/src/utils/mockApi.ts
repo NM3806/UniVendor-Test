@@ -76,6 +76,60 @@ export const setupMockAPI = () => {
         });
       }
 
+      // Handle request OTP (fake success)
+      if (url.includes('/api/auth/request-otp') && init?.method === 'POST') {
+        return new Response(JSON.stringify({
+          message: 'OTP sent to email',
+          previewUrl: 'https://mock.email/otp'
+        }), {
+          headers: { 'Content-Type': 'application/json' },
+          status: 200
+        });
+      }
+
+      // Handle verify OTP (simulate login by storing user in localStorage)
+      if (url.includes('/api/auth/verify-otp') && init?.method === 'POST') {
+        const user = {
+          id: 1,
+          email: "demo@example.com",
+          firstName: "Demo",
+          lastName: "User",
+          role: "vendor"
+        };
+
+        localStorage.setItem("mock_user", JSON.stringify(user)); // 💾 Save mock session
+
+        return new Response(JSON.stringify(user), {
+          headers: { 'Content-Type': 'application/json' },
+          status: 200
+        });
+      }
+
+      // Handle session check
+      if (url.includes('/api/auth/session')) {
+        const storedUser = localStorage.getItem("mock_user");
+
+        if (storedUser) {
+          return new Response(storedUser, {
+            headers: { 'Content-Type': 'application/json' },
+            status: 200
+          });
+        }
+
+        return new Response(null, {
+          status: 401
+        });
+      }
+
+      // Handle logout
+      if (url.includes('/api/auth/logout')) {
+        localStorage.removeItem("mock_user"); // 🧹 Clear session
+
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { 'Content-Type': 'application/json' },
+          status: 200
+        });
+      }
       if (url.includes('/login') || url.includes('/register')) {
         return new Response(JSON.stringify({
           user: {
@@ -93,16 +147,29 @@ export const setupMockAPI = () => {
       }
 
       // Current user
-      return new Response(JSON.stringify({
-        id: 1,
-        email: "demo@example.com",
-        firstName: "Demo",
-        lastName: "User",
-        role: "vendor"
-      }), {
-        headers: { 'Content-Type': 'application/json' },
-        status: 200
-      });
+      if (url.endsWith('/api/auth/session')) {
+        // Simulate guest (unauthenticated) user
+        const isLoggedIn = localStorage.getItem('mock_is_logged_in') === 'true';
+
+        if (isLoggedIn) {
+          return new Response(JSON.stringify({
+            id: 1,
+            email: "demo@example.com",
+            firstName: "Demo",
+            lastName: "User",
+            role: "vendor"
+          }), {
+            headers: { 'Content-Type': 'application/json' },
+            status: 200
+          });
+        } else {
+          return new Response('null', {
+            headers: { 'Content-Type': 'application/json' },
+            status: 200
+          });
+        }
+      }
+
     }
 
     // Handle cart endpoints with localStorage persistence

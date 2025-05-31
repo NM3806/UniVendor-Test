@@ -10,7 +10,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CartComponent } from "@/components/checkout/CartComponent";
+import { useCartContext } from "@/contexts/CartContext"; 
 
 interface CartItem {
   id: number;
@@ -40,16 +40,20 @@ const formatCurrency = (amount: string | number, currency = "INR") => {
 const CartPage = () => {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
-  
+
   // Fetch cart data
-  const { 
-    data: cart,
+  const {
+    cart,
     isLoading,
     error,
-  } = useQuery<Cart>({
-    queryKey: ["/api/cart"],
-  });
-  
+    updateQuantity,
+    removeItem,
+    clearCart,
+    getCartSummary
+  } = useCartContext();
+
+  const { subtotal, tax, total, itemCount } = getCartSummary();
+
   // Update cart item quantity mutation
   const updateQuantityMutation = useMutation({
     mutationFn: async ({ itemId, quantity }: { itemId: number; quantity: number }) => {
@@ -60,12 +64,12 @@ const CartPage = () => {
         },
         body: JSON.stringify({ quantity }),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to update quantity");
       }
-      
+
       return await response.json();
     },
     onSuccess: () => {
@@ -79,19 +83,19 @@ const CartPage = () => {
       });
     },
   });
-  
+
   // Remove item from cart mutation
   const removeItemMutation = useMutation({
     mutationFn: async (itemId: number) => {
       const response = await fetch(`/api/cart/items/${itemId}`, {
         method: "DELETE",
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to remove item");
       }
-      
+
       return await response.json();
     },
     onSuccess: () => {
@@ -109,18 +113,18 @@ const CartPage = () => {
       });
     },
   });
-  
+
   // Handle quantity change
   const handleQuantityChange = (itemId: number, newQuantity: number) => {
     if (newQuantity < 1) return;
-    updateQuantityMutation.mutate({ itemId, quantity: newQuantity });
+    updateQuantity(itemId, newQuantity);
   };
-  
+
   // Handle remove item
   const handleRemoveItem = (itemId: number) => {
-    removeItemMutation.mutate(itemId);
+    removeItem(itemId);
   };
-  
+
   // Loading state
   if (isLoading) {
     return (
@@ -130,7 +134,7 @@ const CartPage = () => {
       </div>
     );
   }
-  
+
   // Error state
   if (error) {
     return (
@@ -144,7 +148,7 @@ const CartPage = () => {
       </div>
     );
   }
-  
+
   // Empty cart
   if (!cart?.items?.length) {
     return (
@@ -168,7 +172,7 @@ const CartPage = () => {
       </div>
     );
   }
-  
+
   return (
     <div className="container mx-auto p-4 md:p-8 max-w-6xl">
       <div className="mb-8">
@@ -177,7 +181,7 @@ const CartPage = () => {
           Review and update items in your cart
         </p>
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           <Card>
@@ -201,7 +205,7 @@ const CartPage = () => {
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-col h-full justify-between">
                         <div>
@@ -210,7 +214,7 @@ const CartPage = () => {
                             {formatCurrency(item.price)} each
                           </p>
                         </div>
-                        
+
                         <div className="flex mt-2 items-center justify-between">
                           <div className="flex items-center border rounded-md">
                             <Button
@@ -237,7 +241,7 @@ const CartPage = () => {
                               <Plus className="h-3 w-3" />
                             </Button>
                           </div>
-                          
+
                           <div className="flex items-center gap-4">
                             <p className="font-medium">
                               {formatCurrency(parseFloat(item.price) * item.quantity)}
@@ -264,7 +268,7 @@ const CartPage = () => {
               <Button asChild variant="outline">
                 <Link to="/">Continue Shopping</Link>
               </Button>
-              <Button 
+              <Button
                 disabled={!cart?.items?.length}
                 onClick={() => setLocation(`/vendors/${cart.vendorId}/checkout`)}
               >
@@ -273,7 +277,7 @@ const CartPage = () => {
             </CardFooter>
           </Card>
         </div>
-        
+
         <div>
           <div className="sticky top-8">
             <Card>
@@ -284,29 +288,29 @@ const CartPage = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>{formatCurrency(cart.subtotal)}</span>
+                    <span>{formatCurrency(subtotal)}</span>
                   </div>
-                  
+
                   <div className="flex justify-between text-sm">
                     <span>Shipping</span>
                     <span className="text-muted-foreground">Calculated at checkout</span>
                   </div>
-                  
+
                   <div className="flex justify-between text-sm">
                     <span>Tax</span>
                     <span className="text-muted-foreground">Calculated at checkout</span>
                   </div>
                 </div>
-                
+
                 <Separator />
-                
+
                 <div className="flex justify-between font-medium text-lg">
                   <span>Estimated Total</span>
-                  <span>{formatCurrency(cart.total)}</span>
+                  <span>{formatCurrency(total)}</span>
                 </div>
-                
+
                 <div className="pt-4">
-                  <Button 
+                  <Button
                     className="w-full"
                     disabled={!cart?.items?.length}
                     onClick={() => setLocation(`/vendors/${cart.vendorId}/checkout`)}
@@ -314,7 +318,7 @@ const CartPage = () => {
                     Checkout
                   </Button>
                 </div>
-                
+
                 <div className="text-xs text-center text-muted-foreground pt-2">
                   Taxes and shipping calculated at checkout
                 </div>
@@ -325,7 +329,7 @@ const CartPage = () => {
       </div>
     </div>
   );
-  
+
 };
 
 export default CartPage;
