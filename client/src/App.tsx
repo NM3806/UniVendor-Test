@@ -45,6 +45,8 @@ import SimpleTestPage from "./pages/simple-test";
 import IndependentCartPage from "./pages/independent-cart";
 import PrivateRoute from "@/components/PrivateRoute";
 import CartPage from "@/pages/checkout/CartPage";
+import { useLocation } from "wouter";
+import { useCartContext } from "@/contexts/CartContext";
 
 interface NewsletterProps {
   newsletterEmail: string;
@@ -82,6 +84,10 @@ function Router({
       </Switch>
     );
   }
+
+  const [_, setLocation] = useLocation();
+  const { getCartSummary } = useCartContext();
+  const { itemCount } = getCartSummary();
 
   // Otherwise show the platform's routes
   return (
@@ -166,13 +172,24 @@ function Router({
                   </a>
 
                   {/* Cart */}
-                  <a href="/cart" className="flex items-center text-gray-700 hover:text-indigo-600 relative">
+                  <button
+                    onClick={() => setLocation("/cart")}
+                    className="flex items-center text-gray-700 hover:text-indigo-600 relative"
+                  >
+                    {/* Keep your existing icon */}
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
+
                     <span className="ml-2 text-sm font-medium hidden sm:inline">Cart</span>
-                    <span className="absolute -top-2 -right-2 bg-indigo-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">3</span>
-                  </a>
+
+                    {/* Dynamic Badge */}
+                    {itemCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-indigo-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        {itemCount > 99 ? "99+" : itemCount}
+                      </span>
+                    )}
+                  </button>
                 </div>
               </div>
 
