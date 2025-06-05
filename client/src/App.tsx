@@ -647,9 +647,9 @@ function Router({
         </PrivateRoute>
       </Route>
       <Route path="/products">
-        <PrivateRoute roles={["vendor"]}>
+        {/* <PrivateRoute roles={["vendor"]}> */}
           <ProductsPage />
-        </PrivateRoute>
+        {/* </PrivateRoute> */}
       </Route>
       <Route path="/product-categories">
         <PrivateRoute roles={["vendor"]}>

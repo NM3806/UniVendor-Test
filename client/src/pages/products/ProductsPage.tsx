@@ -16,7 +16,7 @@ const ProductsPage = () => {
   const [_, navigate] = useLocation();
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<number | undefined>(undefined);
-  const vendorId = user?.role === 'vendor' ? user.id : undefined;
+  // const vendorId = user?.role === 'vendor' ? user.id : undefined;
   const products = mockProducts;
   const isLoading = false;
   const [hoveredProductColorMap, setHoveredProductColorMap] = useState<Record<number, string | undefined>>({});
