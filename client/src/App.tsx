@@ -303,7 +303,7 @@ function Router({
             <div className="container mx-auto px-4">
               <div className="flex justify-between items-center mb-8">
                 <h2 className="text-2xl font-bold text-gray-900">Featured Products</h2>
-                <a href="#" className="text-indigo-600 font-medium hover:underline">View All</a>
+                <a href="/products" className="text-indigo-600 font-medium hover:underline">View All</a>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {/* Product 1 */}
