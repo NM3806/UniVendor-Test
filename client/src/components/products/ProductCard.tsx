@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'wouter';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { 
-  Edit, 
-  Trash2, 
-  Heart, 
-  ShoppingCart, 
+import {
+  Edit,
+  Trash2,
+  Heart,
+  ShoppingCart,
   Eye,
   Tag,
   PackageCheck,
@@ -38,6 +38,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {useLocalCart} from "@/hooks/useLocalCart";
 
 type ProductCardProps = {
   product: {
@@ -65,14 +66,15 @@ const ProductCard = ({ product, onEdit, onDelete, isVendorView = true }: Product
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
-  
+  const {addToCart} = useLocalCart();
+
   const formatPrice = (price: string | number) => {
     return typeof price === 'string' ? `₹${parseFloat(price).toFixed(2)}` : `₹${price.toFixed(2)}`;
   };
 
   const getInventoryBadge = () => {
     if (product.inventoryQuantity === undefined) return null;
-    
+
     if (product.inventoryQuantity <= 0) {
       return <Badge variant="error" className="ml-2">Out of Stock</Badge>;
     } else if (product.inventoryQuantity < 10) {
@@ -141,7 +143,7 @@ const ProductCard = ({ product, onEdit, onDelete, isVendorView = true }: Product
               <PackageCheck className="h-16 w-16" />
             </div>
           )}
-          
+
           {/* Status badge */}
           <div className="absolute top-2 right-2">
             {getStatusBadge()}
@@ -162,7 +164,7 @@ const ProductCard = ({ product, onEdit, onDelete, isVendorView = true }: Product
                     <span>Edit Product</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     className="text-destructive focus:text-destructive"
                     onClick={() => setShowDeleteAlert(true)}
                   >
@@ -186,7 +188,7 @@ const ProductCard = ({ product, onEdit, onDelete, isVendorView = true }: Product
 
           {/* Product Name */}
           <h3 className="font-medium text-base mb-1 line-clamp-1">{product.name}</h3>
-          
+
           {/* Product Description */}
           {product.description && (
             <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
@@ -234,14 +236,29 @@ const ProductCard = ({ product, onEdit, onDelete, isVendorView = true }: Product
               <Heart className="h-4 w-4" />
               <span className="sr-only">Add to wishlist</span>
             </Button>
+
             <Button
               variant="default"
               size="sm"
               className="flex-1 ml-2"
+              onClick={() =>
+                addToCart({
+                  productId: product.id,
+                  name: product.name,
+                  price: product.sellingPrice.toString(),
+                  quantity: 1,
+                  imageUrl: product.featuredImageUrl ?? null,
+                  variant: null,
+                  colorHex: null,
+                  size: null,
+                  vendorId: 1,
+                })
+              }
             >
               <ShoppingCart className="mr-2 h-4 w-4" />
               Add to Cart
             </Button>
+
           </CardFooter>
         )}
       </Card>
@@ -258,7 +275,7 @@ const ProductCard = ({ product, onEdit, onDelete, isVendorView = true }: Product
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={handleDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Helmet } from "react-helmet";
 import EnhancedProductForm from "@/components/products/enhanced/EnhancedProductForm";
+import { mockProducts } from '@/lib/mockProducts';
 
 interface ProductDetailsProps {
   id: string;
@@ -59,18 +60,12 @@ const ProductDetails = ({ id }: ProductDetailsProps) => {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [hoveredColor, setHoveredColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   //product fetch
-  const {
-    data: product,
-    isLoading,
-    error,
-  } = useQuery<Product>({
-    queryKey: ["/api/products", parseInt(id)],
-    queryFn: () => fetch(`/api/products/${id}`).then((res) => res.json()),
-    refetchOnWindowFocus: false,
-  });
+  const product = mockProducts.find(p => p.id === parseInt(id));
+  const isLoading = false;
+  const error = !product;
+
 
   if (product && product.colors && !product.colors[0].imageUrl) {
     product.colors = product.colors.map((color, index) => ({
@@ -230,16 +225,9 @@ const ProductDetails = ({ id }: ProductDetailsProps) => {
                   selectedColor === color.hex ? "3px solid #000" : "1px solid #ccc",
               }}
               className="w-8 h-8 rounded-full"
-              onClick={() => onColorChange(color.hex)}
-              onMouseEnter={() => {
-                setHoveredColor(color.hex);
-                setPreviewImage(color.imageUrl || product.defaultImage);
-              }}
-              onMouseLeave={() => {
-                setHoveredColor(null);
-                setPreviewImage(null);
-              }}
-
+              onClick={() => setSelectedColor(color.hex)}
+              onMouseEnter={() => setHoveredColor(color.hex)}
+              onMouseLeave={() => setHoveredColor(null)}
             />
           ))}
         </div>
@@ -262,14 +250,13 @@ const ProductDetails = ({ id }: ProductDetailsProps) => {
           </div>
         </div>
 
-        <div>
-          <img
-            src={previewImage || getImageForColor(selectedColor)}
-            alt="Product Preview"
-            className="w-64 h-64 object-contain border"
-          />
+        <div
+          className="w-64 h-64 border rounded-md"
+          style={{
+            backgroundColor: hoveredColor || selectedColor || "#e5e7eb",
+          }}
+        />
 
-        </div>
 
         <div className="flex gap-4">
           <Button onClick={handleAddToCart}>

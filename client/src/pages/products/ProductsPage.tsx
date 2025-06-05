@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Package, Search, FolderTree, PlusCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import EnhancedProductDialog from '@/components/products/enhanced/EnhancedProductDialog';
+import { mockProducts } from '@/lib/mockProducts';
 
 const ProductsPage = () => {
   const { user } = useAuth();
@@ -16,7 +17,10 @@ const ProductsPage = () => {
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<number | undefined>(undefined);
   const vendorId = user?.role === 'vendor' ? user.id : undefined;
-  
+  const products = mockProducts;
+  const isLoading = false;
+  const [hoveredProductColorMap, setHoveredProductColorMap] = useState<Record<number, string | undefined>>({});
+
   // Define product type
   type Product = {
     id: number;
@@ -29,17 +33,17 @@ const ProductsPage = () => {
   };
 
   // Fetch vendor's products
-  const { data: products, isLoading } = useQuery<Product[]>({
-    queryKey: vendorId ? [`/api/vendors/${vendorId}/products`] : ['/api/products'],
-    enabled: !!user,
-  });
-  
+  // const { data: products, isLoading } = useQuery<Product[]>({
+  //   queryKey: vendorId ? [`/api/vendors/${vendorId}/products`] : ['/api/products'],
+  //   enabled: !!user,
+  // });
+
   // Filter products based on search query
-  const filteredProducts = products?.filter(product => 
+  const filteredProducts = products?.filter(product =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     product.description?.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  
+
   return (
     <DashboardLayout title="Products" subtitle="View your product catalog">
       <div className="flex justify-between items-center mb-6">
@@ -65,14 +69,14 @@ const ProductsPage = () => {
           Add Product
         </Button>
       </div>
-      
+
       {/* Add Product Dialog */}
       <EnhancedProductDialog
         open={isAddProductOpen}
         onOpenChange={setIsAddProductOpen}
         title="Add New Product"
       />
-      
+
       {/* Edit Product Dialog */}
       {selectedProductId && (
         <EnhancedProductDialog
@@ -84,7 +88,7 @@ const ProductsPage = () => {
           title="Edit Product"
         />
       )}
-      
+
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -104,18 +108,33 @@ const ProductsPage = () => {
       ) : products?.length ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {filteredProducts?.map((product) => (
-            <Card 
-              key={product.id} 
+            <Card
+              key={product.id}
               className="overflow-hidden shadow-sm hover:shadow transition-shadow cursor-pointer group"
-              onClick={() => setSelectedProductId(product.id)}
+              onClick={() => navigate(`/products/${product.id}`)}
             >
               {product.imageUrl ? (
-                <div className="relative">
-                  <img 
-                    src={product.imageUrl} 
-                    alt={product.name} 
+                <div className="relative flex justify-center">
+                  {/* <img
+                    src={product.imageUrl}
+                    alt={product.name}
                     className="w-full aspect-video object-cover group-hover:opacity-90 transition-opacity"
+                  /> */}
+                  <div
+                    className="w-64 h-64 border rounded-md"
+                    style={{
+                      backgroundColor: hoveredProductColorMap[product.id] || product.colors?.[0]?.hex || "#e5e7eb",
+                    }}
+                    onMouseEnter={() => {
+                      if (product.colors?.[0]?.hex) {
+                        setHoveredProductColorMap((prev) => ({ ...prev, [product.id]: product.colors[1]?.hex || product.colors[0].hex }));
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      setHoveredProductColorMap((prev) => ({ ...prev, [product.id]: undefined }));
+                    }}
                   />
+
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <Button size="sm" variant="secondary" className="shadow-md">
                       Edit Product
@@ -123,8 +142,13 @@ const ProductsPage = () => {
                   </div>
                 </div>
               ) : (
-                <div className="w-full aspect-video bg-muted flex items-center justify-center relative">
-                  <Package className="h-12 w-12 text-muted-foreground/50" />
+                <div
+                  className="w-full aspect-video flex items-center justify-center relative"
+                  style={{
+                    backgroundColor: product.colors?.[0]?.hex || '#e5e7eb' // fallback gray
+                  }}
+                >
+                  <span className="text-white font-semibold">{product.name}</span>
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <Button size="sm" variant="secondary" className="shadow-md">
                       Edit Product
@@ -132,6 +156,7 @@ const ProductsPage = () => {
                   </div>
                 </div>
               )}
+
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg">{product.name}</CardTitle>
                 <CardDescription>

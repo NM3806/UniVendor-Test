@@ -10,7 +10,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useCartContext } from "@/contexts/CartContext"; 
+import { useCartContext } from "@/contexts/CartContext";
 
 interface CartItem {
   id: number;
@@ -192,19 +192,16 @@ const CartPage = () => {
               <div className="divide-y">
                 {cart.items.map((item) => (
                   <div key={item.id} className="flex p-4 gap-4">
-                    <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                      {item.imageUrl ? (
-                        <img
-                          src={item.imageUrl}
-                          alt={item.name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                          <span className="text-gray-400 text-xs">No image</span>
-                        </div>
-                      )}
+                    <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0">
+                      <div
+                        className="w-full h-full rounded border"
+                        style={{
+                          backgroundColor: item.colorHex || '#e5e7eb',
+                        }}
+                        title={item.variant}
+                      />
                     </div>
+
 
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-col h-full justify-between">

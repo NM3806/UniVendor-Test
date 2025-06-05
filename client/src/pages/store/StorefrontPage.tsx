@@ -7,6 +7,8 @@ import { Loader2, ShoppingBag, ShoppingCart, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import CategoryNav from '@/components/store/CategoryNav';
+import ProductCard from '@/components/products/ProductCard';
+import ProductCardWithVariants from '@/components/products/ProductCardWithVariants';
 
 interface Product {
   id: number;
@@ -24,22 +26,61 @@ interface Product {
 export default function StorefrontPage() {
   const { isVendorStore, vendor, domain, loading, error } = useVendorStore();
   const { user, isAuthenticated, logoutMutation } = useAuth();
-  
+
   // Use React Query to fetch products for better caching and loading states
-  const { 
-    data: products = [],
-    isLoading: loadingProducts,
-    error: productsError
-  } = useQuery({
-    queryKey: vendor ? [`/api/vendors/${vendor.id}/products`] : [],
-    queryFn: vendor ? 
-      async () => {
-        const response = await fetch(`/api/vendors/${vendor.id}/products?storefront=true`);
-        if (!response.ok) throw new Error('Failed to fetch products');
-        return response.json() as Promise<Product[]>;
-      } : undefined,
-    enabled: !!isVendorStore && !!vendor,
-  });
+  const products = [
+    {
+      id: 1,
+      name: "Classic T-Shirt",
+      price: "499.00",
+      compareAtPrice: "799.00",
+      description: "Soft cotton t-shirt",
+      imageUrl: "/images/tshirt-red.jpg", // default image
+      status: "active",
+      sku: "TSHIRT-RED",
+      categoryId: 1,
+      inventoryQuantity: 100,
+      colors: [
+        { hex: "#FF0000", label: "Red", image: "/images/tshirt-red.jpg" },
+        { hex: "#0000FF", label: "Blue", image: "/images/tshirt-blue.jpg" }
+      ],
+      sizes: ["S", "M", "L", "XL"]
+    },
+    {
+      id: 2,
+      name: "Casual Hoodie",
+      price: "999.00",
+      compareAtPrice: null,
+      description: "Warm and stylish hoodie",
+      imageUrl: "/images/hoodie-black.jpg",
+      status: "active",
+      sku: "HOODIE-BLK",
+      categoryId: 2,
+      inventoryQuantity: 30,
+      colors: [
+        { hex: "#000000", label: "Black", image: "/images/hoodie-black.jpg" },
+        { hex: "#808080", label: "Grey", image: "/images/hoodie-grey.jpg" }
+      ],
+      sizes: ["M", "L", "XL"]
+    },
+    {
+      id: 3,
+      name: "Running Shoes",
+      price: "1599.00",
+      compareAtPrice: "1999.00",
+      description: "Lightweight running shoes",
+      imageUrl: "/images/shoes-white.jpg",
+      status: "active",
+      sku: "SHOES-WHT",
+      categoryId: 3,
+      inventoryQuantity: 50,
+      colors: [
+        { hex: "#FFFFFF", label: "White", image: "/images/shoes-white.jpg" },
+        { hex: "#000000", label: "Black", image: "/images/shoes-black.jpg" }
+      ],
+      sizes: ["7", "8", "9", "10", "11"]
+    }
+  ];
 
   if (loading) {
     return (
@@ -63,8 +104,8 @@ export default function StorefrontPage() {
       <div className="flex flex-col items-center justify-center min-h-screen p-4">
         <h1 className="text-2xl font-bold mb-2">Welcome to MultiVend</h1>
         <p className="text-gray-600 mb-6">This is the platform homepage. Vendor stores are accessed through their own domains.</p>
-        <a 
-          href="https://multivend.com/vendors" 
+        <a
+          href="https://multivend.com/vendors"
           className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 transition-colors"
         >
           Browse Vendors
@@ -76,16 +117,16 @@ export default function StorefrontPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Store Header */}
-      <header className="store-header text-white py-6" style={{ 
+      <header className="store-header text-white py-6" style={{
         background: `var(--color-primary, ${vendor?.storeTheme === 'default' ? 'linear-gradient(to right, #4f46e5, #3b82f6)' : 'var(--color-primary)'})`
       }}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               {vendor?.logoUrl ? (
-                <img 
-                  src={vendor.logoUrl} 
-                  alt={`${vendor.companyName} logo`} 
+                <img
+                  src={vendor.logoUrl}
+                  alt={`${vendor.companyName} logo`}
                   className="w-10 h-10 object-contain"
                 />
               ) : (
@@ -108,9 +149,9 @@ export default function StorefrontPage() {
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center space-x-2 text-white hover:text-white/80 transition-colors">
                       {user.avatarUrl ? (
-                        <img 
-                          src={user.avatarUrl} 
-                          alt={`${user.firstName || user.email}`} 
+                        <img
+                          src={user.avatarUrl}
+                          alt={`${user.firstName || user.email}`}
                           className="h-8 w-8 rounded-full object-cover border-2 border-white"
                         />
                       ) : (
@@ -155,7 +196,7 @@ export default function StorefrontPage() {
           </div>
         </div>
       </header>
-      
+
       {/* Category Navigation Bar */}
       <div className="border-b border-gray-200 bg-white shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4">
@@ -173,7 +214,7 @@ export default function StorefrontPage() {
           <section>
             <h2 className="text-2xl font-bold mb-6">Welcome to {vendor?.companyName}</h2>
             <p className="text-gray-600 max-w-3xl">
-              This is a vendor storefront accessed through a custom domain: <strong>{domain?.name}</strong>. 
+              This is a vendor storefront accessed through a custom domain: <strong>{domain?.name}</strong>.
               The store has its own branding, products, and theme based on the vendor's settings.
             </p>
           </section>
@@ -191,41 +232,9 @@ export default function StorefrontPage() {
             ) : products.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {products.map((product) => (
-                  <div key={product.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div className="aspect-square bg-gray-100 relative">
-                      {product.imageUrl ? (
-                        <img 
-                          src={product.imageUrl} 
-                          alt={product.name}
-                          className="w-full h-full object-cover" 
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <ShoppingBag className="h-12 w-12 text-gray-300" />
-                        </div>
-                      )}
-                      {product.compareAtPrice && (
-                        <div className="absolute top-2 left-2">
-                          <span className="bg-accent text-accent-foreground text-xs font-bold px-2 py-1 rounded">SALE</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-medium text-gray-900 mb-2 truncate">{product.name}</h3>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span style={{ color: 'var(--color-primary)' }} className="font-bold">${product.price}</span>
-                          {product.compareAtPrice && (
-                            <span className="text-sm text-gray-500 line-through ml-2">${product.compareAtPrice}</span>
-                          )}
-                        </div>
-                        <Button size="sm" variant="outline" className="rounded-full p-2">
-                          <ShoppingCart className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
+                  <ProductCardWithVariants key={product.id} product={product} />
                 ))}
+
               </div>
             ) : (
               <div className="text-center py-12 bg-gray-50 rounded-lg">
@@ -249,17 +258,17 @@ export default function StorefrontPage() {
             <div>
               <h3 className="font-bold text-lg mb-4">Quick Links</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-gray-600 hover:text-primary" style={{ 
-                  ['&:hover' as any]: { color: 'var(--color-primary)' } 
+                <li><a href="#" className="text-gray-600 hover:text-primary" style={{
+                  ['&:hover' as any]: { color: 'var(--color-primary)' }
                 }}>Products</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary" style={{ 
-                  ['&:hover' as any]: { color: 'var(--color-primary)' } 
+                <li><a href="#" className="text-gray-600 hover:text-primary" style={{
+                  ['&:hover' as any]: { color: 'var(--color-primary)' }
                 }}>Categories</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary" style={{ 
-                  ['&:hover' as any]: { color: 'var(--color-primary)' } 
+                <li><a href="#" className="text-gray-600 hover:text-primary" style={{
+                  ['&:hover' as any]: { color: 'var(--color-primary)' }
                 }}>About Us</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary" style={{ 
-                  ['&:hover' as any]: { color: 'var(--color-primary)' } 
+                <li><a href="#" className="text-gray-600 hover:text-primary" style={{
+                  ['&:hover' as any]: { color: 'var(--color-primary)' }
                 }}>Contact</a></li>
               </ul>
             </div>

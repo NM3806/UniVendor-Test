@@ -4,7 +4,6 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/not-found";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { VendorStoreProvider, useVendorStore } from "@/contexts/VendorStoreContext";
@@ -308,119 +307,129 @@ function Router({
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {/* Product 1 */}
-                <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                  <div className="relative">
-                    <div className="aspect-square bg-gray-200"></div>
-                    <div className="absolute top-2 left-2">
-                      <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">SALE</span>
-                    </div>
-                    <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full text-gray-700 hover:text-red-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-sm text-gray-500 mb-1">Electronics</h3>
-                    <h4 className="font-medium text-gray-900 mb-2 truncate">Wireless Bluetooth Headphones</h4>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-lg font-bold text-gray-900">$89.99</span>
-                        <span className="text-sm text-gray-500 line-through ml-2">$129.99</span>
+                <Link href={`/products/1`} className="block">
+                  <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div className="relative">
+                      <div className="aspect-square bg-gray-200"></div>
+                      <div className="absolute top-2 left-2">
+                        <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">SALE</span>
                       </div>
-                      <div className="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full text-gray-700 hover:text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
-                        <span className="text-sm text-gray-700 ml-1">4.5</span>
+                      </button>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="text-sm text-gray-500 mb-1">Electronics</h3>
+                      <h4 className="font-medium text-gray-900 mb-2 truncate">Wireless Bluetooth Headphones</h4>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-lg font-bold text-gray-900">$89.99</span>
+                          <span className="text-sm text-gray-500 line-through ml-2">$129.99</span>
+                        </div>
+                        <div className="flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                          <span className="text-sm text-gray-700 ml-1">4.5</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
 
                 {/* Product 2 */}
-                <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                  <div className="relative">
-                    <div className="aspect-square bg-gray-200"></div>
-                    <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full text-gray-700 hover:text-red-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-sm text-gray-500 mb-1">Fashion</h3>
-                    <h4 className="font-medium text-gray-900 mb-2 truncate">Men's Casual Shirt</h4>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-lg font-bold text-gray-900">$39.99</span>
-                      </div>
-                      <div className="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                <Link href={`/products/2`} className="block">
+                  <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div className="relative">
+                      <div className="aspect-square bg-gray-200"></div>
+                      <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full text-gray-700 hover:text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
-                        <span className="text-sm text-gray-700 ml-1">4.2</span>
+                      </button>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="text-sm text-gray-500 mb-1">Fashion</h3>
+                      <h4 className="font-medium text-gray-900 mb-2 truncate">Men's Casual Shirt</h4>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-lg font-bold text-gray-900">$39.99</span>
+                        </div>
+                        <div className="flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                          <span className="text-sm text-gray-700 ml-1">4.2</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
 
                 {/* Product 3 */}
-                <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                  <div className="relative">
-                    <div className="aspect-square bg-gray-200"></div>
-                    <div className="absolute top-2 left-2">
-                      <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">NEW</span>
-                    </div>
-                    <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full text-gray-700 hover:text-red-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-sm text-gray-500 mb-1">Home</h3>
-                    <h4 className="font-medium text-gray-900 mb-2 truncate">Smart LED Light Bulb</h4>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-lg font-bold text-gray-900">$24.99</span>
+                <Link href={`/products/3`} className="block">
+
+                  <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div className="relative">
+                      <div className="aspect-square bg-gray-200"></div>
+                      <div className="absolute top-2 left-2">
+                        <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">NEW</span>
                       </div>
-                      <div className="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full text-gray-700 hover:text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
-                        <span className="text-sm text-gray-700 ml-1">4.8</span>
+                      </button>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="text-sm text-gray-500 mb-1">Home</h3>
+                      <h4 className="font-medium text-gray-900 mb-2 truncate">Smart LED Light Bulb</h4>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-lg font-bold text-gray-900">$24.99</span>
+                        </div>
+                        <div className="flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                          <span className="text-sm text-gray-700 ml-1">4.8</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
 
                 {/* Product 4 */}
-                <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                  <div className="relative">
-                    <div className="aspect-square bg-gray-200"></div>
-                    <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full text-gray-700 hover:text-red-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-sm text-gray-500 mb-1">Beauty</h3>
-                    <h4 className="font-medium text-gray-900 mb-2 truncate">Organic Face Serum</h4>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-lg font-bold text-gray-900">$32.99</span>
-                      </div>
-                      <div className="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                <Link href={`/products/4`} className="block">
+
+                  <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div className="relative">
+                      <div className="aspect-square bg-gray-200"></div>
+                      <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full text-gray-700 hover:text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
-                        <span className="text-sm text-gray-700 ml-1">4.7</span>
+                      </button>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="text-sm text-gray-500 mb-1">Beauty</h3>
+                      <h4 className="font-medium text-gray-900 mb-2 truncate">Organic Face Serum</h4>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-lg font-bold text-gray-900">$32.99</span>
+                        </div>
+                        <div className="flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                          <span className="text-sm text-gray-700 ml-1">4.7</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
           </section>

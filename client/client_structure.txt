@@ -1,0 +1,257 @@
+Folder PATH listing for volume Acer
+Volume serial number is 40EA-5C0D
+C:.
+¦   .env.development
+¦   client_structure.txt
+¦   index.html
+¦   
++---src
+    ¦   App.tsx
+    ¦   index.css
+    ¦   main.tsx
+    ¦   
+    +---components
+    ¦   ¦   ImpersonationBanner.tsx
+    ¦   ¦   PayPalButton.tsx
+    ¦   ¦   PrivateRoute.tsx
+    ¦   ¦   
+    ¦   +---admin
+    ¦   ¦       UserImpersonation.tsx
+    ¦   ¦       UsersList.tsx
+    ¦   ¦       
+    ¦   +---checkout
+    ¦   ¦       AddressForm.tsx
+    ¦   ¦       AddressList.tsx
+    ¦   ¦       CartComponent.tsx
+    ¦   ¦       CheckoutForm.tsx
+    ¦   ¦       PaymentMethodSelector.tsx
+    ¦   ¦       PayPalCheckout.tsx
+    ¦   ¦       StripeCheckout.tsx
+    ¦   ¦       
+    ¦   +---common
+    ¦   ¦       S3FileUpload.tsx
+    ¦   ¦       
+    ¦   +---dashboard
+    ¦   ¦       DomainList.tsx
+    ¦   ¦       RecentVendors.tsx
+    ¦   ¦       StatCard.tsx
+    ¦   ¦       SubscriptionPlans.tsx
+    ¦   ¦       
+    ¦   +---domains
+    ¦   ¦       DomainForm.tsx
+    ¦   ¦       DomainTable.tsx
+    ¦   ¦       DomainVerification.tsx
+    ¦   ¦       
+    ¦   +---layout
+    ¦   ¦       DashboardLayout.tsx
+    ¦   ¦       Header.tsx
+    ¦   ¦       Sidebar.tsx
+    ¦   ¦       
+    ¦   +---orders
+    ¦   ¦       OrderDetails.tsx
+    ¦   ¦       OrderTable.tsx
+    ¦   ¦       
+    ¦   +---payments
+    ¦   ¦       PaymentMethodForm.tsx
+    ¦   ¦       PaymentMethodList.tsx
+    ¦   ¦       PaymentProviderForm.tsx
+    ¦   ¦       
+    ¦   +---products
+    ¦   ¦   ¦   MatrixVariantManager.tsx
+    ¦   ¦   ¦   ProductCard.tsx
+    ¦   ¦   ¦   ProductForm.tsx
+    ¦   ¦   ¦   ProductImagesUploader.tsx
+    ¦   ¦   ¦   ProductVariantManager.tsx
+    ¦   ¦   ¦   ProductVariantsTab.tsx
+    ¦   ¦   ¦   
+    ¦   ¦   +---enhanced
+    ¦   ¦   ¦       EnhancedProductDialog.tsx
+    ¦   ¦   ¦       EnhancedProductForm.tsx
+    ¦   ¦   ¦       EnhancedVariantManager.tsx
+    ¦   ¦   ¦       MatrixVariantGenerator.tsx
+    ¦   ¦   ¦       ProductFormStepNav.tsx
+    ¦   ¦   ¦       ProductFormStepSummary.tsx
+    ¦   ¦   ¦       ProductImageUploader.tsx
+    ¦   ¦   ¦       ProductTagsInput.tsx
+    ¦   ¦   ¦       VariantAttributesManager.tsx
+    ¦   ¦   ¦       
+    ¦   ¦   +---new
+    ¦   ¦           NewProductForm.tsx
+    ¦   ¦           
+    ¦   +---shared
+    ¦   ¦       DashboardHeader.tsx
+    ¦   ¦       
+    ¦   +---store
+    ¦   ¦       CategoryNav.tsx
+    ¦   ¦       ColorPalette.tsx
+    ¦   ¦       FontSelector.tsx
+    ¦   ¦       StoreDesignForm.tsx
+    ¦   ¦       ThemePreview.tsx
+    ¦   ¦       ThemeSelector.tsx
+    ¦   ¦       
+    ¦   +---subscription
+    ¦   ¦       SubscriptionManagement.tsx
+    ¦   ¦       SubscriptionPlans.tsx
+    ¦   ¦       
+    ¦   +---ui
+    ¦   ¦       accordion.tsx
+    ¦   ¦       alert-dialog.tsx
+    ¦   ¦       alert.tsx
+    ¦   ¦       aspect-ratio.tsx
+    ¦   ¦       avatar.tsx
+    ¦   ¦       badge.tsx
+    ¦   ¦       breadcrumb.tsx
+    ¦   ¦       button.tsx
+    ¦   ¦       calendar.tsx
+    ¦   ¦       card.tsx
+    ¦   ¦       carousel.tsx
+    ¦   ¦       chart.tsx
+    ¦   ¦       checkbox.tsx
+    ¦   ¦       collapsible.tsx
+    ¦   ¦       command.tsx
+    ¦   ¦       context-menu.tsx
+    ¦   ¦       date-range-picker.tsx
+    ¦   ¦       dialog.tsx
+    ¦   ¦       drawer.tsx
+    ¦   ¦       dropdown-menu.tsx
+    ¦   ¦       file-upload.tsx
+    ¦   ¦       form.tsx
+    ¦   ¦       hover-card.tsx
+    ¦   ¦       input-otp.tsx
+    ¦   ¦       input.tsx
+    ¦   ¦       label.tsx
+    ¦   ¦       menubar.tsx
+    ¦   ¦       navigation-menu.tsx
+    ¦   ¦       page-header.tsx
+    ¦   ¦       pagination.tsx
+    ¦   ¦       popover.tsx
+    ¦   ¦       progress.tsx
+    ¦   ¦       radio-group.tsx
+    ¦   ¦       resizable.tsx
+    ¦   ¦       scroll-area.tsx
+    ¦   ¦       select.tsx
+    ¦   ¦       separator.tsx
+    ¦   ¦       sheet.tsx
+    ¦   ¦       sidebar.tsx
+    ¦   ¦       skeleton.tsx
+    ¦   ¦       slider.tsx
+    ¦   ¦       switch.tsx
+    ¦   ¦       table.tsx
+    ¦   ¦       tabs.tsx
+    ¦   ¦       tag-input.tsx
+    ¦   ¦       textarea.tsx
+    ¦   ¦       toast.tsx
+    ¦   ¦       toaster.tsx
+    ¦   ¦       toggle-group.tsx
+    ¦   ¦       toggle.tsx
+    ¦   ¦       tooltip.tsx
+    ¦   ¦       
+    ¦   +---vendors
+    ¦           VendorForm.tsx
+    ¦           VendorTable.tsx
+    ¦           
+    +---contexts
+    ¦       AuthContext.tsx
+    ¦       CartContext.tsx
+    ¦       ThemeContext.tsx
+    ¦       VendorStoreContext.tsx
+    ¦       
+    +---hooks
+    ¦       use-auth.ts
+    ¦       use-mobile.tsx
+    ¦       use-toast.ts
+    ¦       useCart.tsx
+    ¦       useLocalCart.tsx
+    ¦       
+    +---lib
+    ¦   ¦   formatCurrency.ts
+    ¦   ¦   formatters.ts
+    ¦   ¦   queryClient.ts
+    ¦   ¦   setup.ts
+    ¦   ¦   utils.ts
+    ¦   ¦   
+    ¦   +---validations
+    ¦           product.ts
+    ¦           
+    +---pages
+    ¦   ¦   not-found.tsx
+    ¦   ¦   s3-upload-test.tsx
+    ¦   ¦   TestStorePage.tsx
+    ¦   ¦   
+    ¦   +---admin
+    ¦   ¦       UsersManagementPage.tsx
+    ¦   ¦       
+    ¦   +---analytics
+    ¦   ¦       AnalyticsPage.tsx
+    ¦   ¦       VendorAnalyticsPage.tsx
+    ¦   ¦       
+    ¦   +---auth
+    ¦   ¦       LoginPage.tsx
+    ¦   ¦       RegisterPage.tsx
+    ¦   ¦       
+    ¦   +---checkout
+    ¦   ¦       CartPage.tsx
+    ¦   ¦       CheckoutPage.tsx
+    ¦   ¦       
+    ¦   +---customers
+    ¦   ¦       CustomersPage.tsx
+    ¦   ¦       
+    ¦   +---dashboard
+    ¦   ¦       SuperAdminDashboard.tsx
+    ¦   ¦       VendorDashboard.tsx
+    ¦   ¦       
+    ¦   +---domains
+    ¦   ¦       DomainDetailPage.tsx
+    ¦   ¦       DomainsPage.tsx
+    ¦   ¦       
+    ¦   +---independent-cart
+    ¦   ¦       index.tsx
+    ¦   ¦       
+    ¦   +---marketing
+    ¦   ¦       MarketingPage.tsx
+    ¦   ¦       
+    ¦   +---orders
+    ¦   ¦       OrdersPage.tsx
+    ¦   ¦       
+    ¦   +---payments
+    ¦   ¦       PaymentSettingsPage.tsx
+    ¦   ¦       
+    ¦   +---products
+    ¦   ¦       ProductCategoriesPage.tsx
+    ¦   ¦       ProductDetails.tsx
+    ¦   ¦       ProductsPage.tsx
+    ¦   ¦       ProductSubcategoriesPage.tsx
+    ¦   ¦       ProductSubcategoriesPage.tsx.bak
+    ¦   ¦       
+    ¦   +---reports
+    ¦   ¦       ReportsPage.tsx
+    ¦   ¦       
+    ¦   +---settings
+    ¦   ¦       SettingsPage.tsx
+    ¦   ¦       
+    ¦   +---simple-test
+    ¦   ¦       index.tsx
+    ¦   ¦       
+    ¦   +---store
+    ¦   ¦       BuyerLoginPage.tsx
+    ¦   ¦       CategoryPage.tsx
+    ¦   ¦       StoreDesignPage.tsx
+    ¦   ¦       StorefrontPage.tsx
+    ¦   ¦       
+    ¦   +---subscriptions
+    ¦   ¦       SubscriptionsPage.tsx
+    ¦   ¦       
+    ¦   +---test-cart
+    ¦   ¦       index.tsx
+    ¦   ¦       
+    ¦   +---vendor
+    ¦   ¦       SubscriptionPage.tsx
+    ¦   ¦       
+    ¦   +---vendors
+    ¦           VendorDetails.tsx
+    ¦           VendorsPage.tsx
+    ¦           
+    +---utils
+            cartUtils.ts
+            mockApi.ts
+            
