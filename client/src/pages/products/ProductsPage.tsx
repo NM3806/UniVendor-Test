@@ -3,7 +3,6 @@ import { useLocation, Link } from 'wouter';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/use-auth';
-import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Package, Search, FolderTree, PlusCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';

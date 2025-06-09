@@ -23,7 +23,7 @@ const Header = ({ onToggleSidebar, title, subtitle }: HeaderProps) => {
   const { getCartSummary } = useCartContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [, setLocation] = useLocation();
-  
+
   const { itemCount } = getCartSummary();
 
   return (
@@ -66,7 +66,7 @@ const Header = ({ onToggleSidebar, title, subtitle }: HeaderProps) => {
             <span className="sr-only">View notifications</span>
             <Bell className="h-6 w-6" />
             <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-red-500 flex items-center justify-center text-white text-xs">
-              3
+              2
             </span>
           </button>
 
@@ -103,21 +103,37 @@ const Header = ({ onToggleSidebar, title, subtitle }: HeaderProps) => {
                 <ChevronDown className="ml-1 h-4 w-4 text-gray-500" />
               </div>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>
-                {user?.firstName} {user?.lastName}
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => {
-                logoutMutation.mutate();
-                setLocation('/');
-              }}>
-                Logout
-              </DropdownMenuItem>
+              {user ? (
+                <>
+                  <DropdownMenuLabel>
+                    {user.firstName} {user.lastName}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      logoutMutation.mutate();
+                      setLocation("/");
+                    }}
+                  >
+                    Logout
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <>
+                  <DropdownMenuLabel>Guest</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setLocation("/login")}>
+                    Sign In
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
+
           </DropdownMenu>
         </div>
       </div>
